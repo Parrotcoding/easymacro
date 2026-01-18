@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EasyMacro</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-title">EasyMacro</div>
+          <div class="brand-status" id="playbackStatus">Playback stopped</div>
+        </div>
+        <div class="controls">
+          <div class="toggle">
+            <input id="armedToggle" type="checkbox" />
+            <label for="armedToggle">Armed</label>
+          </div>
+          <button class="btn btn-primary" id="addStepButton">Add Step</button>
+          <button class="btn" id="playButton">Play</button>
+          <div class="dropdown">
+            <button class="btn btn-ghost" id="fileMenuButton">File ▾</button>
+            <div class="dropdown-menu" id="fileMenu">
+              <button class="menu-item" id="fileNew">New</button>
+              <button class="menu-item" id="fileOpen">Open…</button>
+              <button class="menu-item" id="fileSave">Save</button>
+              <button class="menu-item" id="fileSaveAs">Save As…</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="steps">
+          <div class="section-title">Recorded Steps</div>
+          <div class="table">
+            <div class="table-head">
+              <div>#</div>
+              <div>Type</div>
+              <div>Button</div>
+              <div>Location</div>
+              <div>Delay</div>
+            </div>
+            <div class="table-body" id="stepsBody"></div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <div class="panel">
+            <div class="panel-title">Edit Step</div>
+            <div class="panel-body" id="editPanel">
+              <div class="muted">Select a step to edit.</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Shortcuts</div>
+            <div class="panel-body">
+              <div class="row">
+                <div>
+                  <div class="label">Panic Toggle</div>
+                  <div class="muted small">Stops playback immediately.</div>
+                </div>
+                <div class="pill">Ctrl + Shift + P</div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">File</div>
+            <div class="panel-body">
+              <div class="label" id="fileNameLabel">Untitled.emacro</div>
+              <div class="muted small">Store macros locally as .emacro files.</div>
+              <div class="panel-actions">
+                <button class="btn btn-ghost" id="fileNewInline">New</button>
+                <button class="btn btn-ghost" id="fileOpenInline">Open…</button>
+                <button class="btn btn-ghost" id="fileSaveInline">Save</button>
+              </div>
+              <button class="btn btn-clear" id="clearSteps">Clear Steps</button>
+            </div>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <div class="modal-backdrop hidden" id="modalBackdrop">
+      <div class="modal">
+        <div class="modal-title">Add Step</div>
+        <div class="modal-body">
+          <div class="field-group">
+            <div class="label">Type</div>
+            <div class="segmented">
+              <button class="seg-btn active" data-type="click">Click</button>
+              <button class="seg-btn" data-type="wait">Wait</button>
+            </div>
+          </div>
+          <div class="field-grid" id="clickFields">
+            <div class="field">
+              <div class="label">Button</div>
+              <select id="clickButton">
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="label">Position</div>
+              <select id="clickPosition">
+                <option value="current">Current</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div class="field inline hidden" id="positionInputs">
+              <input id="posX" type="number" placeholder="X" min="0" />
+              <input id="posY" type="number" placeholder="Y" min="0" />
+            </div>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <div class="label">Delay (ms)</div>
+              <input id="delayMs" type="number" min="0" value="0" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" id="cancelModal">Cancel</button>
+          <button class="btn btn-primary" id="confirmAdd">Add Step</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
