@@ -1,0 +1,203 @@
+<Window
+    x:Class="EasyMacroWin.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="EasyMacro"
+    Width="1200"
+    Height="760"
+    MinWidth="980"
+    MinHeight="640">
+
+  <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <Grid x:Name="HeaderPanel" Grid.Row="0" Padding="24,18,24,12" ColumnSpacing="16">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+
+      <StackPanel Grid.Column="0" Spacing="2">
+        <TextBlock Text="EasyMacro" FontSize="20" FontWeight="SemiBold"/>
+        <TextBlock x:Name="StatusText" Text="Playback stopped" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+      </StackPanel>
+
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+        <ToggleSwitch x:Name="LoopToggle" OffContent="" OnContent="" ToolTipService.ToolTip="Repeat playback indefinitely"/>
+        <Button x:Name="AddStepButton" Content="Add Step" Click="AddStepButton_Click"/>
+        <Button x:Name="PlayButton" Content="Play" Click="PlayButton_Click"/>
+        <MenuBar>
+          <MenuBarItem Title="File">
+            <MenuFlyoutItem Text="New" Click="FileNew_Click"/>
+            <MenuFlyoutItem Text="Open..." Click="FileOpen_Click"/>
+            <MenuFlyoutItem Text="Save" Click="FileSave_Click"/>
+            <MenuFlyoutItem Text="Save As..." Click="FileSaveAs_Click"/>
+          </MenuBarItem>
+        </MenuBar>
+      </StackPanel>
+    </Grid>
+
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="280"/>
+      </Grid.ColumnDefinitions>
+
+      <Grid Grid.Column="0">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Recorded Steps" FontSize="14" FontWeight="SemiBold" Margin="20,16,0,8"/>
+
+        <Grid Grid.Row="1" Margin="20,0,20,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="90"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="#" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+          <TextBlock Grid.Column="1" Text="Button" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+          <TextBlock Grid.Column="2" Text="Location" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+          <TextBlock Grid.Column="4" Text="Delay" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="2" Margin="12,8,12,12">
+          <StackPanel x:Name="StepsPanel" Spacing="4"/>
+        </ScrollViewer>
+      </Grid>
+
+      <Border Grid.Column="1" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,0,0">
+        <ScrollViewer>
+          <StackPanel Spacing="20" Padding="20,16,20,16">
+            <Border Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8">
+              <StackPanel Spacing="12">
+                <TextBlock Text="Edit Step" FontWeight="SemiBold"/>
+                <TextBlock x:Name="EditEmptyText" Text="Select a step to edit." Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <StackPanel x:Name="EditFormPanel" Spacing="10" Visibility="Collapsed">
+                  <StackPanel>
+                    <TextBlock Text="Type" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                    <ComboBox x:Name="EditKindCombo" SelectionChanged="EditKindCombo_SelectionChanged">
+                      <ComboBoxItem Content="Left" Tag="leftClick"/>
+                      <ComboBoxItem Content="Right" Tag="rightClick"/>
+                      <ComboBoxItem Content="Other" Tag="otherClick"/>
+                      <ComboBoxItem Content="Wait" Tag="wait"/>
+                    </ComboBox>
+                  </StackPanel>
+
+                  <StackPanel x:Name="EditXYRow" Orientation="Horizontal" Spacing="8">
+                    <StackPanel>
+                      <TextBlock Text="X" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                      <TextBox x:Name="EditXBox" Width="90"/>
+                    </StackPanel>
+                    <StackPanel>
+                      <TextBlock Text="Y" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                      <TextBox x:Name="EditYBox" Width="90"/>
+                    </StackPanel>
+                  </StackPanel>
+
+                  <StackPanel>
+                    <TextBlock Text="Delay (s)" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                    <TextBox x:Name="EditDelayBox" Width="120"/>
+                  </StackPanel>
+
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button x:Name="DeleteStepButton" Content="Delete" Click="DeleteStepButton_Click"/>
+                    <Button x:Name="ApplyEditButton" Content="Apply Changes" Click="ApplyEditButton_Click"/>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <Border Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8">
+              <StackPanel Spacing="8">
+                <TextBlock Text="Shortcuts" FontWeight="SemiBold"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="Panic Toggle (global)"/>
+                  <Border Background="{ThemeResource ControlStrongFillColorDefaultBrush}" Padding="6,2" CornerRadius="8">
+                    <TextBlock Text="Ctrl + Alt + Shift + P" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"/>
+                  </Border>
+                </StackPanel>
+                <TextBlock Text="Panic shortcut halts everything or starts playback when idle."
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+              </StackPanel>
+            </Border>
+
+            <Border Padding="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8">
+              <StackPanel Spacing="10">
+                <TextBlock Text="File" FontWeight="SemiBold"/>
+                <TextBlock x:Name="FileNameText" Text="Untitled.emacro" FontWeight="SemiBold"/>
+                <TextBlock Text="Manage your macro files and keep them handy."
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <Button Content="New" Click="FileNew_Click"/>
+                  <Button Content="Open..." Click="FileOpen_Click"/>
+                  <Button Content="Save" Click="FileSave_Click"/>
+                </StackPanel>
+                <Button x:Name="ClearStepsButton" Content="Clear steps" Click="ClearStepsButton_Click"/>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+
+    <ContentDialog x:Name="AddStepDialog"
+                   Title="Add Step"
+                   PrimaryButtonText="Add Step"
+                   SecondaryButtonText="Cancel"
+                   PrimaryButtonClick="AddStepDialog_PrimaryButtonClick">
+      <StackPanel Spacing="12">
+        <StackPanel>
+          <TextBlock Text="Type" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <RadioButton x:Name="AddTypeClickRadio" Content="Click" IsChecked="True" Checked="AddTypeRadio_Checked"/>
+            <RadioButton x:Name="AddTypeWaitRadio" Content="Wait" Checked="AddTypeRadio_Checked"/>
+          </StackPanel>
+        </StackPanel>
+
+        <StackPanel x:Name="AddClickFields" Spacing="8">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="Button" VerticalAlignment="Center"/>
+            <ComboBox x:Name="AddButtonCombo" Width="140">
+              <ComboBoxItem Content="Left" Tag="leftClick"/>
+              <ComboBoxItem Content="Right" Tag="rightClick"/>
+              <ComboBoxItem Content="Other" Tag="otherClick"/>
+            </ComboBox>
+          </StackPanel>
+
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="Position" VerticalAlignment="Center"/>
+            <ComboBox x:Name="AddPositionCombo" Width="140" SelectionChanged="AddPositionCombo_SelectionChanged">
+              <ComboBoxItem Content="Center" Tag="center"/>
+              <ComboBoxItem Content="Mouse" Tag="mouse"/>
+              <ComboBoxItem Content="Custom" Tag="custom"/>
+            </ComboBox>
+          </StackPanel>
+
+          <StackPanel x:Name="AddCustomPosition" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
+            <TextBox x:Name="AddXBox" Width="80" PlaceholderText="X"/>
+            <TextBox x:Name="AddYBox" Width="80" PlaceholderText="Y"/>
+          </StackPanel>
+        </StackPanel>
+
+        <StackPanel x:Name="AddWaitFields" Spacing="8">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="Delay (s)" VerticalAlignment="Center"/>
+            <TextBox x:Name="AddDelayBox" Width="120" Text="0"/>
+          </StackPanel>
+        </StackPanel>
+      </StackPanel>
+    </ContentDialog>
+  </Grid>
+</Window>
